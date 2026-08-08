@@ -12,17 +12,16 @@ export const useAuthStore = defineStore('auth', () => {
     //action
     async function login(email, password) {
         try {
+
             const res = await api.post('/auth/login', { email, password });
-            console.log(res.data.data);
-            
             user.value = res.data.data;
             token.value = res.data?.data?.[0]?.token;
-            console.log(token.value);
-            
-            localStorage.setItem("token", token.value);
+            localStorage.setItem("token", token.value); 
+            console.log("Login Successfully");
 
         } catch (err) {
-            throw new Error(err.response.data.message || 'Unknown error')
+            console.log("Login Error", err);
+            // throw new Error(err.response.data.message || 'Unknown error')
         }
     }
     async function logout(){
@@ -30,10 +29,22 @@ export const useAuthStore = defineStore('auth', () => {
             await api.delete('/auth/logout');
             user.value = {};
             token.value = null;
-            console.log(token.value);
             localStorage.removeItem("token");
+            console.log("Logout Successfully");
+            
 
         }catch(err){
+            console.log("Logout Error", err);
+            throw new Error(err.response.data.message || 'Unknown error')
+        }
+    }
+
+    async function register(name,email,password) {
+        try{
+            const res = await api.post('/auth/register', { name, email, password});
+            console.log("Register Successfully");
+        } catch (err) {
+            console.log("Register Error", err);
             throw new Error(err.response.data.message || 'Unknown error')
         }
     }
@@ -41,7 +52,8 @@ export const useAuthStore = defineStore('auth', () => {
     // return
     return {
         login,
-        logout
+        logout,
+        register
     }
 
 })

@@ -191,13 +191,12 @@ import { useRouter } from 'vue-router';
     })
 
     const handleLogin = async () =>{
-        console.log(email.value,password.value);
         if(!validate()) return;
+        
         try{
             await auth.login(email.value,password.value);
             router.push('/')
         }catch(error){
-            console.log(error);
             err.password = error.response.data.message || 'Unknown error';
         }
     }

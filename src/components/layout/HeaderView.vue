@@ -23,10 +23,13 @@
           class="text-sm font-semibold text-white bg-teal-800 hover:bg-teal-700 px-5 py-2.5 rounded-full transition-colors shadow-sm">
           Register
         </router-link>
-        <router-link to="/logout" v-if="check"
+        <a href="" v-if="check">
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-10 h-10 rounded-circle" alt="">
+        </a>
+        <a  v-if="check" @click="handleLogout"
           class="text-sm font-semibold text-white bg-teal-800 hover:bg-teal-700 px-5 py-2.5 rounded-full transition-colors shadow-sm">
           Logout
-        </router-link>
+        </a>
       </div>
     </div>
   </header>
@@ -37,15 +40,20 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/auth';
 import router from '@/router';
 const auth = useAuthStore();
+
+// ----check token
 let check = ref(false);
 let isLogin = localStorage.getItem("token");
 if (isLogin) {
   check.value = true;
 }
 
-const handleLogout = () => {
+const handleLogout =  () => {
   auth.logout();
-  router.push("/");
+  console.log('Logout Successfully');
+  check.value = false;
+  window.location.href = "/";
+  
 }
 
 
