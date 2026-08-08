@@ -7,6 +7,9 @@ import CompanyView from '@/views/seekers/CompanyView.vue'
 import FindjobView from '@/views/seekers/FindjobView.vue'
 import ContactView from '@/views/seekers/ContactView.vue'
 import AboutView from '@/views/seekers/AboutView.vue'
+import SeekerdetailView from '@/views/seekers/SeekerdetailView.vue'
+import Otp from '@/views/auth/Otp.vue'
+import ResetpasswordView from '@/views/auth/ResetpasswordView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +53,21 @@ const router = createRouter({
       path:'/about',
       name: 'about',
       component: AboutView
+    },
+    {
+      path: '/seeker/detail',
+      name:'seeker_detail',
+      component: SeekerdetailView,
+    },
+    {
+      path: '/otp',
+      name:'opt',
+      component: Otp
+    },
+    {
+      path: '/resetpassword',
+      name: 'resetpassword',
+      component: ResetpasswordView
     }
   ],
 })

@@ -16,12 +16,16 @@
         <router-link to="/about" class="hover:text-emerald-500 transition-colors">About</router-link>
       </nav>
       <div class="flex items-center gap-3">
-        <router-link to="/login"
+        <router-link to="/login" v-if="!check"
           class="hidden sm:inline-block text-sm font-medium text-teal-800 hover:text-emerald-500 px-4 py-2 transition-colors">Log
           in</router-link>
-        <router-link to="/register"
+        <router-link to="/register" v-if="!check"
           class="text-sm font-semibold text-white bg-teal-800 hover:bg-teal-700 px-5 py-2.5 rounded-full transition-colors shadow-sm">
           Register
+        </router-link>
+        <router-link to="/logout" v-if="check"
+          class="text-sm font-semibold text-white bg-teal-800 hover:bg-teal-700 px-5 py-2.5 rounded-full transition-colors shadow-sm">
+          Logout
         </router-link>
       </div>
     </div>
@@ -29,6 +33,20 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
+import { useAuthStore } from '@/stores/auth';
+import router from '@/router';
+const auth = useAuthStore();
+let check = ref(false);
+let isLogin = localStorage.getItem("token");
+if (isLogin) {
+  check.value = true;
+}
+
+const handleLogout = () => {
+  auth.logout();
+  router.push("/");
+}
 
 
 </script>

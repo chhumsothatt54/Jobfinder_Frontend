@@ -81,13 +81,12 @@
           </div>
 
           <div class="mt-auto border-t border-slate-100 p-4">
-            <button
-              type="button"
-              @click="viewSeeker(seeker)"
+            <router-link to="/seeker/detail"
+            
               class="w-full rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition group-hover:bg-teal-600 hover:bg-teal-600 active:bg-teal-700"
             >
               View
-            </button>
+            </router-link>
           </div>
         </div>
       </div>

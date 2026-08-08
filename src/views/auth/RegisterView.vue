@@ -1,6 +1,6 @@
 <template>
     <!-- Replaced h-full with h-screen or min-h-screen for full viewport height -->
-    <main class="min-h-screen h-screen">
+    <main class="min-h-screen h-screen overflow-hidden" >
         <div class="h-full grid lg:grid-cols-2">
 
             <!-- LEFT: brand / atmosphere panel -->
@@ -143,6 +143,6 @@
 </template>
 
 <script setup>
-    
+
 
 </script>

@@ -56,7 +56,7 @@
                     <p class="text-sm text-teal-800/60 mb-9">Don't have an account? <router-link to="/register"
                             class="text-emerald-600 font-semibold hover:text-emerald-500">Sign up free</router-link></p>
 
-                    <form class="space-y-5" @submit.prevent>
+                    <form class="space-y-5" >
 
                         <!-- Email -->
                         <div>
@@ -65,9 +65,10 @@
                             <div
                                 class="input-field flex items-center gap-3 border border-teal-900/15 rounded-xl px-4 py-3 bg-white transition-all">
                                 <i class="bi bi-envelope text-teal-900/40"></i>
-                                <input id="email" type="email" required placeholder="you@example.com"
+                                <input id="email" v-model="email" type="email" required placeholder="you@example.com"
                                     class="w-full outline-none text-sm text-teal-900 placeholder:text-teal-900/35 bg-transparent">
                             </div>
+                            <div v-if="err.email" class="text-red-500 text-xs">{{ err.email }}</div>
                         </div>
 
                         <!-- Password -->
@@ -80,13 +81,14 @@
                             <div
                                 class="input-field flex items-center gap-3 border border-teal-900/15 rounded-xl px-4 py-3 bg-white transition-all">
                                 <i class="bi bi-lock text-teal-900/40"></i>
-                                <input id="password" type="password" required placeholder="••••••••"
+                                <input id="password" v-model="password" type="password" required placeholder="••••••••"
                                     class="w-full outline-none text-sm text-teal-900 placeholder:text-teal-900/35 bg-transparent">
                                 <button type="button"
                                     class="text-teal-900/40 hover:text-teal-900/70">
                                     <i id="toggleIcon" class="bi bi-eye"></i>
                                 </button>
                             </div>
+                            <div v-if="err.password" class="text-red-500 text-xs">{{ err.password }}</div>
                         </div>
 
                         <!-- Remember me -->
@@ -97,7 +99,7 @@
                         </label>
 
                         <!-- Submit -->
-                        <button type="submit"
+                        <button type="submit" @click.prevent="handleLogin"
                             class="w-full bg-teal-800 hover:bg-teal-700 text-white font-semibold text-sm py-3.5 rounded-xl transition-colors shadow-sm">
                             Log in
                         </button>
@@ -115,7 +117,7 @@
                                 class="flex items-center justify-center gap-2 border border-teal-900/15 rounded-xl py-2.5 text-sm font-medium text-teal-800 hover:bg-teal-900/5 transition-colors">
                                 <i class="bi bi-google text-emerald-600"></i> Google
                             </button>
-                            <button type="button"
+                            <button type="submit" 
                                 class="flex items-center justify-center gap-2 border border-teal-900/15 rounded-xl py-2.5 text-sm font-medium text-teal-800 hover:bg-teal-900/5 transition-colors">
                                 <i class="bi bi-facebook text-teal-700"></i> Facebook
                             </button>
@@ -134,5 +136,71 @@
 </template>
 
 <script setup>
+import { reactive, ref, watch } from 'vue';
+import { useAuthStore } from '../../stores/auth';
+import { useRouter } from 'vue-router';
+    const router = useRouter();
+    let auth = useAuthStore();
+
+    let email = ref('');
+    
+    let password = ref('');
+    let err = reactive({
+        email: "",
+        password: ""
+    })
+
+    function validate(){
+        let valid = true;
+
+        if(!email.value){
+            err.email = "Email is required"
+            valid = false;
+        }
+        else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){
+            err.email = "Email is not valid"
+            valid = false;
+        }
+        else{
+            err.email = ""
+        }
+
+        if(!password.value){
+            err.password = "Password is required"
+            valid = false;
+        }
+        else if(password.value.length < 6){
+            err.password = "Password is too short"
+            valid = false;
+        }
+        else{
+            err.password = ""
+        }
+
+        return valid;
+    }
+    watch(email,(value)=>{
+        if(value){
+            validate()
+        }
+    })
+    watch(password,(value)=>{
+        if(value){
+            validate()
+        }
+    })
+
+    const handleLogin = async () =>{
+        console.log(email.value,password.value);
+        if(!validate()) return;
+        try{
+            await auth.login(email.value,password.value);
+            router.push('/')
+        }catch(error){
+            console.log(error);
+            err.password = error.response.data.message || 'Unknown error';
+        }
+    }
+    
 
 </script>
